@@ -1,6 +1,7 @@
-package com.rica.ricaapi.investigadores;
+package com.rica.ricaapi.investigadores.dominio;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,16 +19,18 @@ public class Investigador {
     @Column(name = "nombre_completo", nullable = false, length = 150)
     private String nombreCompleto;
 
-    @Column(name = "correo_institucional", nullable = false, unique = true, length = 150)
-    private String correoInstitucional;
+    @Embedded
+    private CorreoInstitucional correoInstitucional;
 
     @Column(name = "grupo_investigacion", length = 150)
     private String grupoInvestigacion;
 
-    public Investigador() {
+    protected Investigador() {
+        // requerido por JPA
     }
 
-    public Investigador(Long id, String nombreCompleto, String correoInstitucional, String grupoInvestigacion) {
+    public Investigador(Long id, String nombreCompleto, CorreoInstitucional correoInstitucional,
+                        String grupoInvestigacion) {
         this.id = id;
         this.nombreCompleto = nombreCompleto;
         this.correoInstitucional = correoInstitucional;
@@ -38,32 +41,16 @@ public class Investigador {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getNombreCompleto() {
         return nombreCompleto;
     }
 
-    public void setNombreCompleto(String nombreCompleto) {
-        this.nombreCompleto = nombreCompleto;
-    }
-
-    public String getCorreoInstitucional() {
+    public CorreoInstitucional getCorreoInstitucional() {
         return correoInstitucional;
-    }
-
-    public void setCorreoInstitucional(String correoInstitucional) {
-        this.correoInstitucional = correoInstitucional;
     }
 
     public String getGrupoInvestigacion() {
         return grupoInvestigacion;
-    }
-
-    public void setGrupoInvestigacion(String grupoInvestigacion) {
-        this.grupoInvestigacion = grupoInvestigacion;
     }
 
 }

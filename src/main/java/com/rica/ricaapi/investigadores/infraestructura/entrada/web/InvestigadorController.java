@@ -1,5 +1,7 @@
-package com.rica.ricaapi.investigadores;
+package com.rica.ricaapi.investigadores.infraestructura.entrada.web;
 
+import com.rica.ricaapi.investigadores.aplicacion.InvestigadorUseCase;
+import com.rica.ricaapi.investigadores.dominio.Investigador;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,13 +9,14 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.List;
 
+/** Adaptador de entrada REST: traduce HTTP al puerto InvestigadorUseCase. */
 @RestController
 @RequestMapping("/api/investigadores")
 public class InvestigadorController {
 
-    private final InvestigadorService investigadorService;
+    private final InvestigadorUseCase investigadorService;
 
-    public InvestigadorController(InvestigadorService investigadorService) {
+    public InvestigadorController(InvestigadorUseCase investigadorService) {
         this.investigadorService = investigadorService;
     }
 
@@ -26,18 +29,18 @@ public class InvestigadorController {
 
     @GetMapping("/{id}")
     public InvestigadorResponse buscarPorId(@PathVariable Long id) {
-        Investigador investigador = investigadorService.buscarPorId(id);
-        return InvestigadorMapper.aResponse(investigador);
+        return InvestigadorMapper.aResponse(investigadorService.buscarPorId(id));
     }
 
     @PostMapping
     public ResponseEntity<InvestigadorResponse> registrar(@Valid @RequestBody InvestigadorRequest request) {
-        Investigador investigador = InvestigadorMapper.aEntidad(request);
-        Investigador guardado = investigadorService.registrar(investigador);
-        InvestigadorResponse response = InvestigadorMapper.aResponse(guardado);
+        Investigador guardado = investigadorService.registrar(
+                request.getNombreCompleto(),
+                request.getCorreoInstitucional(),
+                request.getGrupoInvestigacion());
         return ResponseEntity
                 .created(URI.create("/api/investigadores/" + guardado.getId()))
-                .body(response);
+                .body(InvestigadorMapper.aResponse(guardado));
     }
 
 }

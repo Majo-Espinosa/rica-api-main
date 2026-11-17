@@ -3,7 +3,7 @@ package com.rica.ricaapi.publicaciones;
 import org.springframework.stereotype.Service;
 
 import com.rica.ricaapi.compartido.RecursoNoEncontradoException;
-import com.rica.ricaapi.investigadores.InvestigadorRepository;
+import com.rica.ricaapi.investigadores.infraestructura.salida.persistencia.InvestigadorRepository;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class PublicacionService {
     }
 
     public Publicacion registrar(Publicacion publicacion) {
-        if (!investigadorRepository.existsByCorreoInstitucional(publicacion.getInvestigadorCorreo())) {
+        if (!investigadorRepository.existsByCorreoInstitucional_Valor(publicacion.getInvestigadorCorreo())) {
             throw new RecursoNoEncontradoException(
                     "No existe un investigador con correo " + publicacion.getInvestigadorCorreo());
         }

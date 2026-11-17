@@ -6,7 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.rica.ricaapi.investigadores.CorreoDuplicadoException;
+import com.rica.ricaapi.investigadores.dominio.CorreoDuplicadoException;
 import com.rica.ricaapi.publicaciones.LimiteAnualExcedidoException;
 
 import java.time.LocalDateTime;
