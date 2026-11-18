@@ -3,6 +3,7 @@ package com.rica.ricaapi.publicaciones;
 import org.springframework.stereotype.Service;
 
 import com.rica.ricaapi.compartido.RecursoNoEncontradoException;
+import com.rica.ricaapi.investigadores.Investigador;
 import com.rica.ricaapi.investigadores.InvestigadorRepository;
 
 import java.util.List;
@@ -23,15 +24,15 @@ public class PublicacionService {
     }
 
     public Publicacion registrar(Publicacion publicacion) {
-        if (!investigadorRepository.existsByCorreoInstitucional(publicacion.getInvestigadorCorreo())) {
-            throw new RecursoNoEncontradoException(
-                    "No existe un investigador con correo " + publicacion.getInvestigadorCorreo());
-        }
-        if (!limitePublicacionesAnualesService.puedeRegistrar(publicacion.getInvestigadorCorreo(), publicacion.getAnio())) {
+        Investigador investigador = investigadorRepository.findByCorreoInstitucional_Valor(publicacion.getInvestigadorCorreo())
+                .orElseThrow(() -> new RecursoNoEncontradoException(
+                        "No existe un investigador con correo " + publicacion.getInvestigadorCorreo()));
+
+        if (!limitePublicacionesAnualesService.puedeRegistrar(investigador, publicacion)) {
             throw new LimiteAnualExcedidoException(
-                    "El investigador " + publicacion.getInvestigadorCorreo()
-                            + " ya alcanzó el máximo de publicaciones registradas para " + publicacion.getAnio());
+                    "El investigador ha superado el límite máximo de publicaciones para el año " + publicacion.getAnio());
         }
+
         return publicacionRepository.save(publicacion);
     }
 
